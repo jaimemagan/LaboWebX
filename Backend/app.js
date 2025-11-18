@@ -9,21 +9,23 @@ import { PORT, JWT_SECRET } from "./keys.js"
 import customerRoutes from "./routes/customer.routes.js"
 import salesRoutes from "./routes/sales.routes.js"     
 
-
 const app = express()
 
-// Middlewares globales
+// Middlewares globales - ORDEN IMPORTANTE
 app.use(cors())
-app.use(bodyParser.json())
+app.use(bodyParser.json()) // ← Esto debe ir antes de las rutas
+app.use(bodyParser.urlencoded({ extended: true })) // ← Agrega esto
 
 // Ruta pública
 app.get("/", (req, res) => {
-  res.send("Bienvenido a la API de usuarios 🧪")
+  res.send("Bienvenido a la API de usuarios ")
 })
 
-// Ruta de login (modo demo, acepta todo)
+// Ruta de login
 app.post("/signin", async (req, res) => {
   const { email, password } = req.body
+
+  console.log("Datos recibidos:", { email, password }) 
 
   try {
     const user = {
@@ -34,7 +36,11 @@ app.post("/signin", async (req, res) => {
 
     const token = jwt.sign(user, JWT_SECRET, { expiresIn: '1h' })
 
-    res.status(200).json({ token })
+    res.status(200).json({ 
+      message: "Login exitoso",
+      token,
+      user 
+    })
   } catch (err) {
     res.status(500).json({ message: "Error en el servidor", error: err.message })
   }
@@ -53,7 +59,6 @@ app.use("/", userRoutes)
 app.use("/api", verifyToken, customerRoutes) 
 app.use("/api", verifyToken, salesRoutes)
 
-
 app.listen(PORT, () =>
-  console.log(`🚀 Server running at http://localhost:${PORT}`)
+  console.log(` Server running at http://localhost:${PORT}`)
 )
