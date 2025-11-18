@@ -6,8 +6,6 @@ import jwt from "jsonwebtoken"
 import userRoutes from "./routes/user.routes.js"
 import verifyToken from "./middlewares/verifyToken.js"
 import { PORT, JWT_SECRET } from "./keys.js"
-
-import userRoutes from "./routes/user.routes.js"
 import customerRoutes from "./routes/customer.routes.js"
 import salesRoutes from "./routes/sales.routes.js"     
 
